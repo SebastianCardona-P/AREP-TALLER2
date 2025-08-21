@@ -190,7 +190,7 @@ The main server class that handles:
 
 Handles HTTP request processing:
 
-- **Query parameter extraction** - Parses URL parameters using `getValue()` and `getValues()`
+- **Query parameter extraction** - Parses URL parameters using `getValue()`
 - **URI parsing** - Processes request paths and query strings
 - **Parameter mapping** - Converts query strings to accessible key-value pairs
 
@@ -211,29 +211,6 @@ Example implementation showing framework usage:
 - **Service registration** - Demonstrates GET and POST service definitions
 - **Static file configuration** - Shows how to set up static resource directories
 - **Server startup** - Illustrates complete application setup
-
-### Framework API
-
-#### Service Registration Methods
-
-```java
-// Register GET service with lambda function
-HttpServer.get("/route", (req, res) -> "response");
-
-// Register POST service
-HttpServer.post("/route", (req, res) -> "response");
-
-// Configure static files directory
-HttpServer.staticfiles("/webroot");
-```
-
-#### Request Parameter Access
-
-```java
-// Extract query parameters
-String name = req.getValue("name");     // Get parameter value
-String name = req.getValues("name");    // Alias method (framework specification)
-```
 
 ## Testing
 
@@ -327,8 +304,8 @@ Services should handle errors gracefully:
 ```java
 HttpServer.get("/calculate", (req, res) -> {
     try {
-        int a = Integer.parseInt(req.getValues("a"));
-        int b = Integer.parseInt(req.getValues("b"));
+        int a = Integer.parseInt(req.getValue("a"));
+        int b = Integer.parseInt(req.getValue("b"));
         return String.valueOf(a + b);
     } catch (NumberFormatException e) {
         return "Error: Invalid numbers";
