@@ -1,13 +1,17 @@
 function loadGetMsg() {
     let nameVar = document.getElementById("name").value;
+    let ageVar = document.getElementById("age").value;
     if (!nameVar || nameVar.trim() === "") {
         nameVar = "";
+    }
+    if (!ageVar || ageVar.trim() == "") {
+        ageVar = "";
     }
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
         document.getElementById("getrespmsg").innerHTML = this.responseText;
     }
-    xhttp.open("GET", "/app/hello?name=" + nameVar);
+    xhttp.open("GET", "/app/hello?name=" + nameVar + "&age=" + ageVar, true);
     xhttp.send();
 }
 

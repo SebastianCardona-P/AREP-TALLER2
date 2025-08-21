@@ -212,6 +212,11 @@ public class HttpServer {
         String serviceRoute = requestUri.getPath().substring(4);
         Service service = services.get(serviceRoute);
 
+        if (service == null) {
+            notFound(out);
+            return;
+        }
+
         HttpRequest req = new HttpRequest(requestUri);
         HttpResponse res = new HttpResponse();
 
@@ -287,6 +292,10 @@ public class HttpServer {
         services.put(route, s);
     }
 
+    public static void post(String route, Service s) {
+        services.put(route, s);
+    }
+
     public static void staticfiles(String staticFile) {
         if (staticFile.startsWith("/")) {
             basePath = "target/classes" + staticFile + "/";
@@ -309,6 +318,35 @@ public class HttpServer {
             }
         }
 
+        //copy the files from src/main/java/resources to current static file path
+        copyStaticFiles("src/main/java/resources", basePath);
+
+    }
+
+    public static void copyStaticFiles(String sourceDir, String destDir) {
+        Path sourcePath = Paths.get(sourceDir);
+        Path destPath = Paths.get(destDir);
+        try {
+            java.nio.file.Files.walk(sourcePath).forEach(source -> {
+                Path destination = destPath.resolve(sourcePath.relativize(source));
+                try {
+                    if (source.toFile().isDirectory()) {
+                        if (!destination.toFile().exists()) {
+                            destination.toFile().mkdirs();
+                        }
+                    } else {
+                        java.nio.file.Files.copy(source, destination, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Could not copy file: " + source.toString());
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("Static files copied to: " + destDir);
+        } catch (IOException e) {
+            System.err.println("Could not copy static files to: " + destDir);
+            e.printStackTrace();
+        }
     }
 
 }
