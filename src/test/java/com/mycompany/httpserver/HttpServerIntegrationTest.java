@@ -15,6 +15,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.mycompany.httpserver.WebApplication.WebApplication;
+
 /**
  * Pruebas de integración para HttpServer
  * Verifica el funcionamiento end-to-end del sistema según el README
@@ -30,7 +32,7 @@ public class HttpServerIntegrationTest {
     static void startServer() {
         serverThread = new Thread(() -> {
             try {
-                HttpServer.main(new String[]{});
+                WebApplication.main(new String[]{});
             } catch (Exception e) {
                 // El servidor puede terminar abruptamente durante las pruebas
                 System.out.println("Servidor terminado: " + e.getMessage());
@@ -98,13 +100,12 @@ public class HttpServerIntegrationTest {
     @Test
     @DisplayName("End-to-end: Servicio REST /app/hello debe funcionar correctamente")
     void testRESTServiceHello() throws IOException {
-        String response = makeHttpRequest("GET /app/hello?name=Sebastian HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
+        String response = makeHttpRequest("GET /app/hello?name=Michael&age=18 HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
         
         assertNotNull(response, "Debe recibir respuesta del servicio REST");
         assertTrue(response.contains("HTTP/1.1 200 OK"), "Debe retornar 200 OK para REST");
         assertTrue(response.contains("application/json"), "Debe retornar JSON");
-        assertTrue(response.contains("Hola Sebastian"), "Debe personalizar el saludo");
-        assertTrue(response.contains("mensaje"), "Debe tener estructura JSON correcta");
+        assertTrue(response.contains("hello Michael you are 18 years old"), "Debe personalizar el saludo");
     }
 
     @Test
@@ -130,7 +131,7 @@ public class HttpServerIntegrationTest {
                 try {
                     String response = makeHttpRequest("GET /app/hello?name=Client" + clientId + " HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
                     results[clientId] = response.contains("HTTP/1.1 200 OK") && 
-                                       response.contains("Hola Client" + clientId);
+                                       response.contains("hello Client" + clientId);
                 } catch (IOException e) {
                     results[clientId] = false;
                 }
@@ -172,7 +173,7 @@ public class HttpServerIntegrationTest {
         
         assertNotNull(response, "Debe manejar parámetros vacíos");
         assertTrue(response.contains("HTTP/1.1 200 OK"), "Debe retornar 200 OK");
-        assertTrue(response.contains("Hola "), "Debe manejar nombre vacío");
+        assertTrue(response.contains("hello "), "Debe manejar nombre vacío");
     }
 
     /**

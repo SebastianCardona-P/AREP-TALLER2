@@ -4,12 +4,13 @@ package com.mycompany.httpserver.WebApplication;
  *
  * @author sebastian.cardona-p
  */
-import static com.mycompany.httpserver.HttpServer.get;
-import static com.mycompany.httpserver.HttpServer.post;
-import static com.mycompany.httpserver.HttpServer.staticfiles;
-import static com.mycompany.httpserver.HttpServer.startServer;
 import java.io.IOException;
 import java.net.URISyntaxException;
+
+import static com.mycompany.httpserver.HttpServer.get;
+import static com.mycompany.httpserver.HttpServer.post;
+import static com.mycompany.httpserver.HttpServer.startServer;
+import static com.mycompany.httpserver.HttpServer.staticfiles;
 
 public class WebApplication {
 
